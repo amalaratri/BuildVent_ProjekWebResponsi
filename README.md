@@ -28,6 +28,23 @@ Berikut adalah beberapa fitur inti yang tersedia dalam aplikasi Buildvent:
 
 ---
 
+## 📁 Struktur Folder Utama
+
+buildvent/
+├── index.php # Halaman utama (autentikasi otomatis)
+├── login.php # Form login pengguna
+├── register.php # Form registrasi pengguna baru
+├── logout.php # Logout session
+├── dashboard.php # Halaman ringkasan informasi
+├── barang.php # Daftar dan manajemen barang
+├── barang_form.php # Form tambah/edit barang
+├── kategori.php # CRUD kategori barang
+├── supplier.php # Data supplier
+├── laporan.php # Halaman laporan inventaris
+├── config/ # Konfigurasi database (jika ada)
+├── assets/ # Berisi CSS, JS, dan gambar
+└── database.sql # File import database (jika disertakan)
+
 ## 📸 Cuplikan Antarmuka (Optional)
 
 > Tambahkan gambar berikut ini jika tersedia di folder `assets/img/`
