@@ -1,190 +1,95 @@
+# 🏗️ Buildvent - Sistem Informasi Manajemen Inventaris Barang
 
-# 📦 Buildvent
+**Buildvent** adalah aplikasi web berbasis PHP yang dirancang untuk memudahkan proses manajemen data barang, kategori, supplier, dan laporan dalam suatu sistem inventaris. Aplikasi ini sangat cocok digunakan oleh usaha kecil, toko, gudang, atau instansi yang membutuhkan pencatatan stok barang secara digital dan efisien.
 
-**Buildvent** adalah aplikasi web berbasis PHP Native yang digunakan untuk membantu pengelolaan inventaris barang secara sederhana dan efisien. Sistem ini mencakup fitur-fitur penting seperti manajemen data barang, kategori, supplier, serta laporan berbasis web untuk membantu pelacakan stok dan aktivitas logistik.
-Proyek ini dirancang agar mudah dipahami dan digunakan oleh pemula yang ingin mempelajari bagaimana membangun sistem CRUD berbasis web dengan PHP dan MySQL, tanpa menggunakan framework berat.
+## 🎯 Tujuan Aplikasi
 
----
+- Menyediakan sistem inventaris barang berbasis web
+- Mempermudah proses pengelolaan stok dan kategori barang
+- Mengelola data supplier dengan terstruktur
+- Menyediakan laporan inventaris yang rapi dan mudah dipahami
+- Menyederhanakan proses pencatatan dan monitoring barang masuk/keluar
 
-## 🚀 Fitur Utama
+## 🧩 Fitur Utama
 
-Berikut adalah beberapa fitur inti yang tersedia dalam aplikasi Buildvent:
+### 1. Manajemen Pengguna
+- Registrasi akun pengguna
+- Login dan logout aman
+- Hak akses berbasis sesi pengguna
 
-- 🔐 **Autentikasi Pengguna**
-  - Login, register, dan logout
-  - Validasi data input pengguna
-- 📦 **Manajemen Barang**
-  - Tambah, ubah, hapus, dan tampilkan data barang
-  - Input stok, harga, dan keterangan barang
-- 🗂️ **Manajemen Kategori**
-  - Pengelompokan barang berdasarkan kategori
-- 🤝 **Manajemen Supplier**
-  - Tambah dan kelola data supplier yang menyediakan barang
-- 📊 **Dashboard Ringkasan**
-  - Statistik jumlah barang, kategori, dan supplier
-- 🧾 **Laporan Inventaris**
-  - Menampilkan data dalam bentuk laporan sederhana
-  - Filter data berdasarkan waktu (opsional jika ditambahkan)
+### 2. Dashboard
+- Menampilkan ringkasan data barang, kategori, dan supplier
+- Akses cepat ke fitur utama
 
----
+### 3. Barang
+- Tambah, edit, dan hapus data barang
+- Informasi barang: nama, kategori, harga, stok, dan supplier
+- Pencarian barang berdasarkan kata kunci
 
-## 📁 Struktur Folder Utama
+### 4. Kategori
+- Tambah dan kelola kategori barang
+- Mengelompokkan barang berdasarkan jenis
 
-```plaintext
+### 5. Supplier
+- Kelola data supplier
+- Informasi: nama supplier, alamat, dan kontak
+
+### 6. Laporan
+- Menampilkan semua data barang beserta stoknya
+- Bisa dijadikan basis pencatatan stok manual atau digital
+
+## 📁 Struktur Proyek
+
+```
 buildvent/
-├── index.php # Halaman utama (autentikasi otomatis)
+│
+├── index.php # Halaman utama redirect login
 ├── login.php # Form login pengguna
-├── register.php # Form registrasi pengguna baru
-├── logout.php # Logout session
-├── dashboard.php # Halaman ringkasan informasi
-├── barang.php # Daftar dan manajemen barang
+├── register.php # Registrasi pengguna
+├── logout.php # Logout session pengguna
+│
+├── dashboard.php # Tampilan dashboard utama
+├── barang.php # Daftar dan kelola data barang
 ├── barang_form.php # Form tambah/edit barang
-├── kategori.php # CRUD kategori barang
+├── kategori.php # Kelola kategori
 ├── supplier.php # Data supplier
 ├── laporan.php # Halaman laporan inventaris
-├── config/ # Konfigurasi database (jika ada)
-├── assets/ # Berisi CSS, JS, dan gambar
-└── database.sql # File import database (jika disertakan)
+│
+├── config/ # Konfigurasi database (jika tersedia)
+├── assets/ # Folder berisi CSS, JS, gambar (opsional)
+└── database.sql # Struktur database MySQL (jika tersedia)
+
 ```
-
-## 📸 Cuplikan Antarmuka (Optional)
-
-> Tambahkan gambar berikut ini jika tersedia di folder `assets/img/`
-
-| Halaman    | Cuplikan                         |
-|------------|----------------------------------|
-| Login      | ![Login](assets/img/login.png)   |
-| Dashboard  | ![Dashboard](assets/img/dashboard.png) |
-| Data Barang| ![Barang](assets/img/barang.png) |
-| Laporan    | ![Laporan](assets/img/laporan.png) |
-
----
 
 ## 🛠️ Teknologi yang Digunakan
 
-- **PHP Native** (tanpa framework)
-- **MySQL / MariaDB** untuk database
+- **PHP Native**
 - **HTML + CSS**
-- **Bootstrap** (jika digunakan)
-- **XAMPP / Laragon** untuk server lokal
-
----
-
-## 📁 Struktur Folder Utama
-
-Setiap file dan folder dalam proyek memiliki peran sebagai berikut:
-
-- `index.php`  
-  Halaman utama (autentikasi otomatis)  
-- `login.php`  
-  Form login pengguna  
-- `register.php`  
-  Form registrasi pengguna baru  
-- `logout.php`  
-  Logout session  
-- `dashboard.php`  
-  Halaman ringkasan informasi  
-- `barang.php`  
-  Daftar dan manajemen barang  
-- `barang_form.php`  
-  Form tambah/edit barang  
-- `kategori.php`  
-  CRUD kategori barang  
-- `supplier.php`  
-  Data supplier  
-- `laporan.php`  
-  Halaman laporan inventaris  
-- `config/`  
-  Konfigurasi database (jika ada)  
-- `assets/`  
-  Berisi CSS, JS, dan gambar  
-- `database.sql`  
-  File import database (jika disertakan)  
-
----
+- **MySQL / MariaDB**
+- **Apache (XAMPP, Laragon, dll)**
 
 ## ⚙️ Cara Instalasi dan Menjalankan Proyek
 
-### 1. Clone Proyek
+1. **Ekstrak ke `htdocs` (jika pakai XAMPP)**
+2. **Import `database.sql` via phpMyAdmin**
+3. **Edit file koneksi di `config/database.php`**
+4. **Akses via browser:**
+   ```
+   http://localhost/buildvent/index.php
+   ```
 
-```bash
-git clone https://github.com/username/buildvent.git
-```
+## 🧪 Akun Contoh
 
-### 2. Letakkan Proyek di Direktori Web Server
+- **Email:** admin@mail.com  
+- **Password:** admin123
 
-Jika menggunakan **XAMPP**, pindahkan ke folder `htdocs`:
-```bash
-cp -r buildvent/ C:/xampp/htdocs/
-```
+## 👨‍💻 Kontributor
 
-### 3. Import Database
-
-- Buka `phpMyAdmin`
-- Buat database baru (misalnya: `buildvent`)
-- Import file `database.sql` (jika tersedia)
-
-### 4. Konfigurasi Koneksi Database
-
-Edit file di `config/database.php` atau sesuai struktur proyek:
-
-```php
-<?php
-$host = 'localhost';
-$dbname = 'buildvent';
-$username = 'root';
-$password = ''; // default XAMPP
-$pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-?>
-```
-
-### 5. Jalankan di Browser
-
-Akses melalui browser:
-```
-http://localhost/buildvent/
-```
+- Amala Ratri Nugraheni - 2317051007 - Kelas A  
+- Al Farinsqi Nayuga - 2317051012 - Kelas A  
+- Lifia Anasywa - 2317051022 - Kelas A  
+- Syauqi Rahmat - 2317051084 - Kelas A  
 
 ---
 
-## 👤 Akun Default (Opsional)
-
-Jika kamu sudah mengisi data login di awal, gunakan kredensial berikut:
-
-| Email             | Password   |
-|------------------|------------|
-| admin@mail.com   | admin123   |
-
-> ⚠️ Sangat disarankan untuk mengganti password setelah login pertama kali demi keamanan.
-
----
-
-## ✨ Kontribusi
-
-Kami terbuka untuk kontribusi dan pengembangan lebih lanjut. Kamu bisa:
-
-- Mengirim Pull Request untuk fitur baru
-- Membuka *Issue* jika menemukan bug
-- Membantu dokumentasi
-
-### Langkah Kontribusi:
-
-1. Fork repositori ini
-2. Buat branch baru (`git checkout -b fitur-baru`)
-3. Commit perubahanmu (`git commit -m 'Tambah fitur X'`)
-4. Push ke branch milikmu (`git push origin fitur-baru`)
-5. Ajukan Pull Request ke repositori utama
-
----
-
-## 📬 Kontak & Kredit
-
-Dikembangkan oleh: 
-- Syauqi Rahmat 2317051084
-- Amala Ratri Nugraheni 2317051007
-- Al Farinsqi Nayuga 2317051012
-- Lifia Anasywa 2317051022
-  
----
-
-Terima kasih sudah menggunakan Buildvent! 🎉
+Terima kasih telah menggunakan **Buildvent**! 🚀
