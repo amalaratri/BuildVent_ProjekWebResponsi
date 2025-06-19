@@ -30,6 +30,7 @@ Berikut adalah beberapa fitur inti yang tersedia dalam aplikasi Buildvent:
 
 ## 📁 Struktur Folder Utama
 
+```plaintext
 buildvent/
 ├── index.php # Halaman utama (autentikasi otomatis)
 ├── login.php # Form login pengguna
@@ -44,6 +45,7 @@ buildvent/
 ├── config/ # Konfigurasi database (jika ada)
 ├── assets/ # Berisi CSS, JS, dan gambar
 └── database.sql # File import database (jika disertakan)
+```
 
 ## 📸 Cuplikan Antarmuka (Optional)
 
