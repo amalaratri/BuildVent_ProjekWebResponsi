@@ -5,6 +5,9 @@ require_once 'config/database.php';
 // Check if user is logged in
 requireLogin();
 
+$user_id = $_SESSION['user_id'];
+$is_admin = isAdmin();
+
 $edit_mode = false;
 $barang = null;
 
@@ -12,12 +15,15 @@ $barang = null;
 if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
     $edit_mode = true;
     $id = mysqli_real_escape_string($conn, $_GET['edit']);
-    $result = mysqli_query($conn, "SELECT * FROM barang WHERE id = '$id'");
+    
+    // Check ownership for non-admin users
+    $ownership_check = $is_admin ? "" : "AND user_id = '$user_id'";
+    $result = mysqli_query($conn, "SELECT * FROM barang WHERE id = '$id' $ownership_check");
     
     if ($result && mysqli_num_rows($result) > 0) {
         $barang = mysqli_fetch_assoc($result);
     } else {
-        $_SESSION['error'] = "Barang tidak ditemukan!";
+        $_SESSION['error'] = "Barang tidak ditemukan atau Anda tidak memiliki izin untuk mengeditnya!";
         header('Location: barang.php');
         exit();
     }
@@ -26,7 +32,11 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 // Check if restoring
 if (isset($_GET['restore']) && is_numeric($_GET['restore'])) {
     $id = mysqli_real_escape_string($conn, $_GET['restore']);
-    $query = "UPDATE barang SET status = 'aktif' WHERE id = '$id'";
+    
+    // Check ownership for non-admin users
+    $ownership_check = $is_admin ? "" : "AND user_id = '$user_id'";
+    $query = "UPDATE barang SET status = 'aktif' WHERE id = '$id' $ownership_check";
+    
     if (mysqli_query($conn, $query)) {
         $_SESSION['success'] = "Barang berhasil diaktifkan kembali!";
     } else {
@@ -110,9 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 updated_at = NOW() 
                 WHERE id = '{$barang['id']}'";
         } else {
-            // Insert new barang
-            $query = "INSERT INTO barang (kode_barang, nama_barang, kategori_id, supplier_id, satuan, stok, stok_minimum, harga, lokasi, deskripsi, created_at) 
-                VALUES ('$kode_barang', '$nama_barang', $kategori_id, $supplier_id, '$satuan', $stok, $stok_minimum, $harga, '$lokasi', '$deskripsi', NOW())";
+            // Insert new barang with user_id
+            $query = "INSERT INTO barang (kode_barang, nama_barang, kategori_id, supplier_id, satuan, stok, stok_minimum, harga, lokasi, deskripsi, user_id, created_at) 
+                VALUES ('$kode_barang', '$nama_barang', $kategori_id, $supplier_id, '$satuan', $stok, $stok_minimum, $harga, '$lokasi', '$deskripsi', '$user_id', NOW())";
         }
         
         if (mysqli_query($conn, $query)) {
@@ -277,5 +287,18 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
+
+<script>
+function formatNumber(input) {
+    // Remove all non-digit characters except for the decimal point
+    let value = input.value.replace(/[^\d]/g, '');
+    
+    // Format as currency
+    if (value) {
+        value = parseInt(value).toLocaleString('id-ID');
+        input.value = 'Rp ' + value;
+    }
+}
+</script>
 
 <?php include 'includes/footer.php'; ?>
