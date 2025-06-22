@@ -23,6 +23,11 @@ requireLogin();
                     <span>
                         <i class="fas fa-user-circle"></i>
                         <?php echo htmlspecialchars($_SESSION['username']); ?>
+                        <?php if (isAdmin()): ?>
+                            <small>(Admin)</small>
+                        <?php else: ?>
+                            <small>(Supplier)</small>
+                        <?php endif; ?>
                     </span>
                     <a href="logout.php" class="btn btn-sm btn-danger">
                         <i class="fas fa-sign-out-alt"></i> Logout
@@ -46,16 +51,6 @@ requireLogin();
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="kategori.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'kategori.php' ? 'active' : ''; ?>">
-                        <i class="fas fa-tags"></i> Kategori
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="supplier.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'supplier.php' ? 'active' : ''; ?>">
-                        <i class="fas fa-truck"></i> Supplier
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="transaksi.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'transaksi.php' ? 'active' : ''; ?>">
                         <i class="fas fa-exchange-alt"></i> Transaksi
                     </a>
@@ -69,6 +64,16 @@ requireLogin();
                 <li class="nav-item">
                     <a href="users.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'users.php' ? 'active' : ''; ?>">
                         <i class="fas fa-users"></i> Pengguna
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="kategori.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'kategori.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-tags"></i> Kategori
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="supplier.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'supplier.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-truck"></i> Data Supplier
                     </a>
                 </li>
                 <?php endif; ?>
