@@ -5,9 +5,24 @@ require_once 'config/database.php';
 // Check if user is logged in
 requireLogin();
 
-// Handle delete
+$user_id = $_SESSION['user_id'];
+$is_admin = isAdmin();
+
+// Handle delete (only admin can delete, or user can delete their own items)
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     $id = mysqli_real_escape_string($conn, $_GET['delete']);
+    
+    // Check ownership for non-admin users
+    if (!$is_admin) {
+        $check_result = mysqli_query($conn, "SELECT user_id FROM barang WHERE id = '$id'");
+        $barang_owner = mysqli_fetch_assoc($check_result);
+        if (!$barang_owner || $barang_owner['user_id'] != $user_id) {
+            $_SESSION['error'] = "Anda tidak memiliki izin untuk menghapus barang ini!";
+            header('Location: barang.php');
+            exit();
+        }
+    }
+    
     $query = "UPDATE barang SET status = 'nonaktif' WHERE id = '$id'";
     if (mysqli_query($conn, $query)) {
         $_SESSION['success'] = "Barang berhasil dihapus!";
@@ -23,8 +38,12 @@ $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['searc
 $kategori_filter = isset($_GET['kategori']) ? mysqli_real_escape_string($conn, $_GET['kategori']) : '';
 $status_filter = isset($_GET['status']) ? mysqli_real_escape_string($conn, $_GET['status']) : 'aktif';
 
-// Build query
+// Build query with user filter for non-admin
 $where_conditions = ["b.status = '$status_filter'"];
+
+if (!$is_admin) {
+    $where_conditions[] = "b.user_id = '$user_id'";
+}
 
 if (!empty($search)) {
     $where_conditions[] = "(b.nama_barang LIKE '%$search%' OR b.kode_barang LIKE '%$search%')";
@@ -38,10 +57,11 @@ $where_clause = implode(" AND ", $where_conditions);
 
 // Get barang data
 $query = "
-    SELECT b.*, k.nama_kategori, s.nama_supplier 
+    SELECT b.*, k.nama_kategori, s.nama_supplier, u.username as created_by
     FROM barang b 
     LEFT JOIN kategori k ON b.kategori_id = k.id 
     LEFT JOIN supplier s ON b.supplier_id = s.id 
+    LEFT JOIN users u ON b.user_id = u.id
     WHERE $where_clause
     ORDER BY b.nama_barang
 ";
@@ -71,7 +91,7 @@ include 'includes/header.php';
     <?php include 'includes/sidebar.php'; ?>
     
     <div class="main-content">
-        <h1 class="page-title">Data Barang</h1>
+        <h1 class="page-title">Data Barang <?php echo $is_admin ? '' : '(Saya)'; ?></h1>
         
         <?php if (isset($_SESSION['success'])): ?>
             <div class="alert alert-success">
@@ -126,6 +146,7 @@ include 'includes/header.php';
                             </select>
                         </div>
                         
+                        <?php if ($is_admin): ?>
                         <div class="form-group">
                             <label class="form-label">Status</label>
                             <select name="status" class="form-control">
@@ -133,6 +154,7 @@ include 'includes/header.php';
                                 <option value="nonaktif" <?php echo $status_filter == 'nonaktif' ? 'selected' : ''; ?>>Nonaktif</option>
                             </select>
                         </div>
+                        <?php endif; ?>
                     </div>
                     
                     <button type="submit" class="btn btn-primary">
@@ -164,6 +186,9 @@ include 'includes/header.php';
                                     <th>Satuan</th>
                                     <th>Harga</th>
                                     <th>Supplier</th>
+                                    <?php if ($is_admin): ?>
+                                    <th>Dibuat Oleh</th>
+                                    <?php endif; ?>
                                     <th>Status</th>
                                     <th class="no-print">Aksi</th>
                                 </tr>
@@ -184,6 +209,9 @@ include 'includes/header.php';
                                         <td><?php echo htmlspecialchars($barang['satuan']); ?></td>
                                         <td><?php echo formatRupiah($barang['harga']); ?></td>
                                         <td><?php echo htmlspecialchars($barang['nama_supplier'] ?? '-'); ?></td>
+                                        <?php if ($is_admin): ?>
+                                        <td><?php echo htmlspecialchars($barang['created_by'] ?? '-'); ?></td>
+                                        <?php endif; ?>
                                         <td>
                                             <?php if ($barang['status'] == 'aktif'): ?>
                                                 <span class="badge bg-success">Aktif</span>
@@ -192,21 +220,25 @@ include 'includes/header.php';
                                             <?php endif; ?>
                                         </td>
                                         <td class="no-print">
-                                            <a href="barang_form.php?edit=<?php echo $barang['id']; ?>" 
-                                               class="btn btn-warning btn-sm">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <?php if ($barang['status'] == 'aktif'): ?>
-                                                <a href="?delete=<?php echo $barang['id']; ?>" 
-                                                   class="btn btn-danger btn-sm"
-                                                   onclick="return confirmDelete('Yakin ingin menghapus barang ini?')">
-                                                    <i class="fas fa-trash"></i>
+                                            <?php if ($is_admin || $barang['user_id'] == $user_id): ?>
+                                                <a href="barang_form.php?edit=<?php echo $barang['id']; ?>" 
+                                                   class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-edit"></i>
                                                 </a>
+                                                <?php if ($barang['status'] == 'aktif'): ?>
+                                                    <a href="?delete=<?php echo $barang['id']; ?>" 
+                                                       class="btn btn-danger btn-sm"
+                                                       onclick="return confirm('Yakin ingin menghapus barang ini?')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                <?php else: ?>
+                                                    <a href="barang_form.php?restore=<?php echo $barang['id']; ?>" 
+                                                       class="btn btn-success btn-sm">
+                                                        <i class="fas fa-undo"></i>
+                                                    </a>
+                                                <?php endif; ?>
                                             <?php else: ?>
-                                                <a href="barang_form.php?restore=<?php echo $barang['id']; ?>" 
-                                                   class="btn btn-success btn-sm">
-                                                    <i class="fas fa-undo"></i>
-                                                </a>
+                                                <span class="text-muted">-</span>
                                             <?php endif; ?>
                                         </td>
                                     </tr>
