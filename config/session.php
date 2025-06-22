@@ -26,6 +26,11 @@ function isAdmin() {
     return isset($_SESSION['role']) && $_SESSION['role'] == 'admin';
 }
 
+// Check if user is operator
+function isOperator() {
+    return isset($_SESSION['role']) && $_SESSION['role'] == 'operator';
+}
+
 // Require login to access page
 function requireLogin() {
     if (!isLoggedIn()) {
